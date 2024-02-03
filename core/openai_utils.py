@@ -1,7 +1,7 @@
 import openai
 import requests
 def generate_chat_completion(user_input, request_info):
-    openai.api_key = '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'
+    openai.api_key = ''  # hidden for now
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
