@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from core.models import (Therapist, User)
+from core.models import (User)
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
@@ -32,6 +32,6 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Therapist)
+
 
 # Register your models here.

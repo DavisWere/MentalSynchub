@@ -22,6 +22,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 # serializers.py
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'user_type', 'specialization']
 
 class ChatCompletionSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,17 +1,11 @@
-import openai
-import requests
-def generate_chat_completion(user_input, request_info):
-    openai.api_key = ''  # hidden for now
+# import openai
+# openai.api_key = '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'
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": user_input},
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "assistant", "content": "The following is a conversation with the user:"},
-            {"role": "assistant", "content": f"{request_info['method']} request to {request_info['path']} with User-Agent: {request_info['user_agent']}. User says: {user_input}"},
-        ],
-        temperature=0.7
-    )
+# # Now you can use the OpenAI client
+# response = openai.Completion.create(
+#    engine="text-davinci-003",
+#     prompt="Once upon a time",
+#     max_tokens=50
+# )
 
-    return response.choices[0].message['content']
+# print(response.choices[0].text.strip())
