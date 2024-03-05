@@ -6,10 +6,49 @@ from django.db import models
 import os
 from datetime import datetime
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.validators import RegexValidator
 from django.utils import timezone
 
 # Create your models here.
+TRANSACTION_STATUS_CHOICES = (
+        ("processing", "Processing"),
+        ("successful", "Successful"),
+        ("failed", "Failed"),
+    )
+CURRENCY_CHOICES = (
+    ("Ksh", "Kenyan Shilling"),
+    ("USD", "US Dollar"),
+    ("UGD", "Ugandan Shilling"),
+    ("TZS", "Tanzanian Shilling"),
+)
+TRANSACTION_TYPE_CHOICES = (
+        ("withdrawal", "Withdrawal"),
+        ("session_booking", "Session_booking"),
+        ("therapist_subscription", " Therapist Subscription"),
+        
+    )
+
+class Transaction(models.Model):
+    customer_account_number = models.CharField(max_length=20, null=True)
+    transaction_amount = models.FloatField()
+    transaction_currency = models.CharField(
+            max_length=40, choices=CURRENCY_CHOICES, default="Kenyan Shilling"
+        )
+    transaction_identifier = models.CharField(
+            max_length=255, unique=True, null=True
+        )  # idempotency_key from mpesa
+    transaction_code = models.CharField(
+            max_length=255, unique=True, null=True
+        )  # Mpesa code after a payment is complete
+    transaction_type = models.CharField(
+        max_length=100, choices=TRANSACTION_TYPE_CHOICES, default="session_booking")
+    # user_id = models.ForeignKey(
+    #         User, on_delete=models.PROTECT
+    #     )  # should take the current logged in user
+    transaction_status = models.CharField(
+            max_length=20, choices=TRANSACTION_STATUS_CHOICES, default="processing"
+        )
+        # add column to specify if transaction has already been utilised
+    utilised = models.BooleanField(default=False)
 
 phone_validator = RegexValidator(r"^\d{9,10}$", "Enter a valid phone number.")
 
@@ -36,9 +75,12 @@ class User(AbstractUser):
     therapy_license = models.CharField(max_length=255, blank=True, null=True)
     specialization = models.CharField(max_length=100, blank=True, null=True)
     license_number = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    transaction_id = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return self.username
+
+
 
 class BookingSession(models.Model):
     WAITING = 'waiting'
@@ -55,45 +97,12 @@ class BookingSession(models.Model):
     session_date = models.DateField()
     session_time = models.TimeField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=WAITING)
+    transaction_id = models.ForeignKey(Transaction, on_delete= models.PROTECT, null=True)
     # Add more fields as needed
     
     def __str__(self):
         return f"Booking Session for {self.user.username} on {self.session_date} at {self.session_time} - Status: {self.status}"
 
-
-TRANSACTION_STATUS_CHOICES = (
-        ("processing", "Processing"),
-        ("successful", "Successful"),
-        ("failed", "Failed"),
-    )
-CURRENCY_CHOICES = (
-    ("Ksh", "Kenyan Shilling"),
-    ("USD", "US Dollar"),
-    ("UGD", "Ugandan Shilling"),
-    ("TZS", "Tanzanian Shilling"),
-)
-
-class Transaction(models.Model):
-    booking_session_id = models.ForeignKey(BookingSession, on_delete= models.CASCADE)
-    customer_account_number = models.CharField(max_length=20, null=True)
-    transaction_amount = models.FloatField()
-    transaction_currency = models.CharField(
-            max_length=40, choices=CURRENCY_CHOICES, default="Kenyan Shilling"
-        )
-    transaction_identifier = models.CharField(
-            max_length=255, unique=True, null=True
-        )  # idempotency_key from mpesa
-    transaction_code = models.CharField(
-            max_length=255, unique=True, null=True
-        )  # Mpesa code after a payment is complete
-    user_id = models.ForeignKey(
-            User, on_delete=models.PROTECT
-        )  # should take the current logged in user
-    transaction_status = models.CharField(
-            max_length=20, choices=TRANSACTION_STATUS_CHOICES, default="processing"
-        )
-        # add column to specify if transaction has already been utilised
-    utilised = models.BooleanField(default=False)
 
 class Game(models.Model):
     ROCK = 'rock'
@@ -125,3 +134,11 @@ class ChatCompletion(models.Model):
     def __str__(self):
         return f"{self.method} request to {self.path} - User says: {self.user_input}"
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+
+    def __str__(self):
+        return f'{self.user.username}: {self.message}'

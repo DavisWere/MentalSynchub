@@ -1,6 +1,5 @@
 from django.shortcuts import render
 import calendar
-
 from django.utils import timezone
 import requests
 from rest_framework import viewsets, permissions
@@ -108,15 +107,17 @@ class GameView(APIView):
     
     def determine_winner(self, user_input, computer_choice):
         if user_input == computer_choice:
-            return 0.5, 0.5, "A Draw!"
+            return 10, 10, "A Draw!"
         elif (user_input == "rock" and computer_choice == "scissors") or \
              (user_input == "paper" and computer_choice == "rock") or \
              (user_input == "scissors" and computer_choice == "paper"):
-            return 1, 0, "You Won!"
+            return 20, 0, "You Won!"
         else:
-            return 0, 1, "You lost!"
+            return 0, 20, "You lost!"
 
 
 class ChatCompletion(View):
     queryset= ChatCompletion.objects.all()
     serializer_class = ChatCompletionSerializer
+
+

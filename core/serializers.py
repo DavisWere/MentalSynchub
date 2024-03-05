@@ -11,7 +11,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 
-from core.models import ( User,  BookingSession,  Transaction, Game, ChatCompletion)
+from core.models import ( User,  BookingSession,  Transaction, Game, ChatCompletion, Notification)
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -28,19 +28,22 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'user_type',  'first_name', 'last_name', 'email', 'phone_code',
                    'phone_number','nationality', 'avatar', 'therapy_license', 
-                     'specialization', 'license_number', 'username','password',
+                     'specialization', 'license_number', 'username','password','transaction_id',
                   ]
         
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     user_type = self.context['request'].data.get('user_type', None)  # Assuming user_type is passed in request data
-    #     if user_type == User.THERAPIST:
-    #         self.fields['therapy_license'] = serializers.CharField(max_length=255)
-    #         self.fields['specialization'] = serializers.CharField(max_length=100)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        user_type = self.context['request'].data.get('user_type', None)  # Assuming user_type is passed in request data
+        if user_type == User.THERAPIST:
+            self.fields['therapy_license'] = serializers.CharField(max_length=255)
+            self.fields['specialization'] = serializers.CharField(max_length=100)
+            self.fields['transaction_id'] = serializers.CharField(max_length=100)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         if data.get('user_type') == User.THERAPIST:
+            data.pop('password')
+        else:
             data.pop('password')  # Remove password field for therapists from representation
         return data
 
@@ -95,13 +98,10 @@ class BookingSessionSerializer(serializers.ModelSerializer):
         return booking_session
 
 class TransactionSerializer(serializers.ModelSerializer):
-    booking_session_id = serializers.PrimaryKeyRelatedField(queryset=BookingSession.objects.all(), 
-                                                            write_only=True, required = False)
     
-
     class Meta:
         model = Transaction
-        fields = ['id', 'booking_session_id', 'customer_account_number', 'transaction_amount',  'transaction_currency',
+        fields = ['id', 'customer_account_number', 'transaction_amount',  'transaction_currency',
                   'transaction_identifier', 'transaction_code', 'transaction_status','utilised'
                   ]
         read_only_fields = ['transaction_code','transaction_identifier',' transaction_status','utilised']
@@ -121,7 +121,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("User is not authenticated.")
         
         user = request.user
-        booking_session= validated_data.pop("booking_session_id")
+        
         customer_account_number = validated_data.pop("customer_account_number")
 
         transaction_amount = validated_data.pop("transaction_amount")
@@ -168,6 +168,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         return paymentTransaction
 
 
+
 class GameSerializer(serializers.ModelSerializer):
    
     class Meta:
@@ -184,8 +185,9 @@ class GameSerializer(serializers.ModelSerializer):
         game =object.create(**validated_data)
         return game
 
+
 class ChatCompletionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatCompletion
         fields = ['id','user_input', 'method', 'path', 'user_agent', 'chat_response']
-        
+    
