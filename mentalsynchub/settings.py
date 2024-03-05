@@ -102,7 +102,7 @@ DATABASES = {
     }
 }
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Mental sync hub Api',
+    'TITLE': 'OpenUp Api',
     'DESCRIPTION': 'mental health digital support Api',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
