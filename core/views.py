@@ -32,7 +32,12 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset= User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    
+
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = User.objects.filter(pk=user.pk)
+        return queryset
 
 class BookingSessionViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSessionSerializer
