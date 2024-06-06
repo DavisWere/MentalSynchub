@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from core.models import ( User,  BookingSession,  Transaction, Game, ChatCompletion, Notification)
+from core.models import (User,  BookingSession,
+                         Transaction, Game, ChatCompletion, Notification)
+
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
@@ -11,8 +13,11 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "phone_code",
                     "phone_number",
-                    
-                   
+                    "user_type",
+                    'transaction_id',
+
+
+
                 )
             },
         ),
@@ -24,13 +29,17 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "phone_code",
                     "phone_number",
+                    "user_type",
                     "email",
-                   
+                    'transaction_id',
+
 
                 )
             },
         ),
     )
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(BookingSession)
 admin.site.register(Transaction)

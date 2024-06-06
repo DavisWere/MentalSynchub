@@ -24,12 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h$1lx%w3j9i1k+@fpi)i1g$#ur+hklnpv(4b_ye(u#8f_y=bq4'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+ENVIRONMENT = os.environ.get('ENVIRONMENT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if ENVIRONMENT != 'dev' else True
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
+                 'https://mentalsynchub.netlify.app/', 'https://e43c-102-0-4-206.ngrok-free.app']
 
 
 # Application definition
@@ -40,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-     'core',
+    'core',
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
@@ -58,10 +61,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'mentalsynchub.urls'
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
+                        'https://e43c-102-0-4-206.ngrok-free.app']
+CORS_ALLOW_CREDENTIALS = True
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
@@ -176,4 +184,39 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-API_KEY = "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"
+API_KEY = os.getenv('API_KEY')
+
+# email configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
+# google meets configuration
+
+GOOGLE_CLIENT_ID = os.getenv('client_id')
+GOOGLE_CLIENT_SECRET = os.getenv('client_secret')
+# Adjust this to your redirect URI
+GOOGLE_REDIRECT_URI = 'http://localhost:8000/oauth2callback/'
+GOOGLE_AUTH_URI = 'https://mentalsynchub.netlify.app'
+GOOGLE_TOKEN_URI = 'https://oauth2.googleapis.com/token'
+PROJECT_ID = os.getenv('project_id')
+GOOGLE_CLIENT_SECRET_JSON = {
+    "web": {
+        "client_id": GOOGLE_CLIENT_ID,
+        "project_id": PROJECT_ID,
+        "auth_uri": GOOGLE_AUTH_URI,
+        "token_uri": GOOGLE_TOKEN_URI,
+        "client_secret": GOOGLE_CLIENT_SECRET,
+        "redirect_uris": [
+            GOOGLE_REDIRECT_URI
+        ],
+        "javascript_origins": [
+            "https://mentalsynchub.netlify.app"
+        ]
+    }
+}

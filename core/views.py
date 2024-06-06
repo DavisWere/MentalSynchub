@@ -12,51 +12,86 @@ from rest_framework import generics
 from django.http import JsonResponse
 import random
 from rest_framework.decorators import api_view
-from django.views.decorators.csrf import csrf_exempt 
+from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 import os
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from django.conf import settings
 from rest_framework.response import Response
 from django.views import View
 from rest_framework_simplejwt.views import TokenObtainPairView
-from core.models import( User, BookingSession, Transaction, Game, ChatCompletion)
-from core.serializers import ( CustomTokenObtainPairSerializer,ChatCompletionSerializer, 
-                              UserSerializer, BookingSessionSerializer, GameSerializer, TransactionSerializer)
+from core.models import (User, BookingSession,
+                         Transaction, Game, ChatCompletion)
+from core.serializers import (CustomTokenObtainPairSerializer, ChatCompletionSerializer,
+                              UserSerializer, BookingSessionSerializer, GameSerializer, TransactionSerializer, ConfirmPaymentStatusSerializer)
+
 
 class CustomObtainTokenPairView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
     serializer_class = CustomTokenObtainPairSerializer
 
+
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
-    queryset= User.objects.all()
+    queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_superuser:
+            user = User.objects.filter(user=user)
+        else:
+            user = User.objects.all()
+        return user
+
 
 class BookingSessionViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSessionSerializer
     queryset = BookingSession.objects.all()
-    permission_classes= [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user =self.request.user
+        user = self.request.user
         all_booked_sessions = BookingSession.objects.filter(user=user)
         return all_booked_sessions
+
 
 class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     queryset = Transaction.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        print(user)
+        all_transactions = Transaction.objects.filter(user=user)
+        return all_transactions
+
+
+class ConfirmPaymentStatusApiView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Transaction.objects.all()
+
+    def get(self, request, transaction_id, format=None):
+        transaction = get_object_or_404(Transaction, pk=transaction_id)
+        serializer = ConfirmPaymentStatusSerializer(instance=transaction)
+        result = serializer.confirm_payment_status()
+
+        return Response(TransactionSerializer(result).data)
+
+    def get_queryset(self):
+        user = self.request.user
+        print(user)
+        all_transactions = Transaction.objects.filter(user=user)
+        return all_transactions
+
 
 class GameView(APIView):
-    queryset =Game.objects.all()
+    queryset = Game.objects.all()
     serializer_class = GameSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
-        
-   
+
     def post(self, request):
         player_name = request.user.username
         if not player_name:
@@ -65,10 +100,11 @@ class GameView(APIView):
         user_input = request.data.get('player_choice')
         if user_input not in ["rock", "paper", "scissors"]:
             return Response({'error': 'Invalid choice'}, status=400)
-        
+
         computer_choice = random.choice(["rock", "paper", "scissors"])
-        
-        user_score, computer_score, result = self.determine_winner(user_input, computer_choice)
+
+        user_score, computer_score, result = self.determine_winner(
+            user_input, computer_choice)
 
         # Create a new game instance
         game = Game.objects.create(
@@ -104,7 +140,7 @@ class GameView(APIView):
             'total_user_score': total_user_score,
             'total_computer_score': total_computer_score,
         })
-    
+
     def determine_winner(self, user_input, computer_choice):
         if user_input == computer_choice:
             return 10, 10, "A Draw!"
@@ -117,7 +153,5 @@ class GameView(APIView):
 
 
 class ChatCompletion(View):
-    queryset= ChatCompletion.objects.all()
+    queryset = ChatCompletion.objects.all()
     serializer_class = ChatCompletionSerializer
-
-
