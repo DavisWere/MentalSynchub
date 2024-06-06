@@ -45,6 +45,11 @@ class UserViewSet(viewsets.ModelViewSet):
             user = User.objects.all()
         return user
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = User.objects.filter(pk=user.pk)
+        return queryset
+
 
 class BookingSessionViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSessionSerializer

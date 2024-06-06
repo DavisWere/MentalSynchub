@@ -30,9 +30,7 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if ENVIRONMENT != 'dev' else True
 
-# ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
-                 'https://mentalsynchub.netlify.app/', 'https://e43c-102-0-4-206.ngrok-free.app']
+ALLOWED_HOSTS = ['*', 'http://localhost:5173']
 
 
 # Application definition
@@ -62,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'mentalsynchub.urls'
