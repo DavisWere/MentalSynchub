@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
     'core',
     'rest_framework',
     'drf_spectacular',
@@ -48,8 +50,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_standardized_errors',
-    'django.contrib.staticfiles',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
