@@ -45,11 +45,6 @@ class UserViewSet(viewsets.ModelViewSet):
             user = User.objects.all()
         return user
 
-    def get_queryset(self):
-        user = self.request.user
-        queryset = User.objects.filter(pk=user.pk)
-        return queryset
-
 
 class BookingSessionViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSessionSerializer
@@ -67,11 +62,18 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     print(user)
+    #     all_transactions = Transaction.objects.filter(user=user)
+    #     return all_transactions
     def get_queryset(self):
         user = self.request.user
-        print(user)
-        all_transactions = Transaction.objects.filter(user=user)
-        return all_transactions
+        if not user.is_superuser:
+            transaction = Transaction.objects.filter(user=user)
+        else:
+            transaction = Transaction.objects.all()
+        return transaction
 
 
 class ConfirmPaymentStatusApiView(APIView):
