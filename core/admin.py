@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from core.models import (User,  BookingSession,
-                         Transaction, Game, ChatCompletion, Notification)
+                         Transaction, Game, ChatCompletion, Notification, Schedule)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -40,11 +40,21 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
+class ScheduleAdmin(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'start_time',
+        'end_time',
+        'reminders',
+        'link'
+    ]
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(BookingSession)
 admin.site.register(Transaction)
 admin.site.register(Game)
 admin.site.register(ChatCompletion)
 admin.site.register(Notification)
+admin.site.register(Schedule, ScheduleAdmin)
 
 # Register your models here.
