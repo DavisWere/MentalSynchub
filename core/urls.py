@@ -2,7 +2,8 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 from core.views import CustomObtainTokenPairView, UserViewSet, BookingSessionViewSet, TransactionViewSet, \
-    ConfirmPaymentStatusApiView, GameView
+    ConfirmPaymentStatusApiView, GameView, CreateEventView
+
 
 
 core_router = DefaultRouter()
@@ -18,5 +19,7 @@ url_patterns += [
     path(
         "confirm-payment-status/<int:transaction_id>/", ConfirmPaymentStatusApiView.as_view(),
     ),
+
+    path('create-event/', CreateEventView.as_view(), name='create-event'),
 
 ]
