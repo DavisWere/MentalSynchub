@@ -18,7 +18,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 
 from core.models import (User,  BookingSession,
-                         Transaction, Game, ChatCompletion, Notification)
+                         Transaction, Game, ChatCompletion, Notification,
+                         Schedule)
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -293,3 +294,17 @@ class ChatCompletionSerializer(serializers.ModelSerializer):
         model = ChatCompletion
         fields = ['id', 'user_input', 'method',
                   'path', 'user_agent', 'chat_response']
+
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = [
+            'id',
+            'link',
+            'attendees',
+            'reminders',
+            'start_time',
+            'end_time',
+            'created_at'
+        ]
