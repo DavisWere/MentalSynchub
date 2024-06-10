@@ -31,7 +31,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from core.models import (User, BookingSession,
                          Transaction, Game, ChatCompletion, Schedule)
 from core.serializers import (CustomTokenObtainPairSerializer, ChatCompletionSerializer,
-                              UserSerializer, BookingSessionSerializer, GameSerializer, TransactionSerializer, ConfirmPaymentStatusSerializer)
+                              UserSerializer, BookingSessionSerializer, GameSerializer, TransactionSerializer, ConfirmPaymentStatusSerializer, ScheduleSerializer)
 
 
 class CustomObtainTokenPairView(TokenObtainPairView):
@@ -169,8 +169,17 @@ class ChatCompletion(View):
     serializer_class = ChatCompletionSerializer
 
 
+class ScheduleViewSet(viewsets.ModelViewSet):
+    serializer_class = ScheduleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Schedule.objects.filter(user=self.request.user)
+
+
 
 class CreateEventView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_credentials(self):
         creds = None
