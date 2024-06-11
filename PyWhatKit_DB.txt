@@ -1,0 +1,50 @@
+Date: 7/6/2024
+Time: 11:6
+Phone Number: ++254745897362
+Message: Hello None, your booking is confirmed for 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:6
+Phone Number: +therapist_phone_number
+Message: Hello, you have a new appointment with None on 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:9
+Phone Number: ++254745897362
+Message: Hello None, your booking is confirmed for 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:9
+Phone Number: ++254745897362
+Message: Hello, you have a new appointment with None on 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:12
+Phone Number: +254745897362
+Message: Hello None, your booking is confirmed for 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:12
+Phone Number: +254745897362
+Message: Hello, you have a new appointment with None on 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:21
+Phone Number: +254745897362
+Message: Hello None, your booking is confirmed for 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:21
+Phone Number: +254745897362
+Message: Hello, you have a new appointment with None on 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:25
+Phone Number: +254795083960
+Message: Hello None, your booking is confirmed for 2024-06-08 at 11:06:00.
+--------------------
+Date: 7/6/2024
+Time: 11:25
+Phone Number: +254795083960
+Message: Hello, you have a new appointment with None on 2024-06-08 at 11:06:00.
+--------------------

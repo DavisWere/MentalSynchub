@@ -3,6 +3,7 @@ import datetime
 from datetime import timedelta
 from django.utils.timezone import make_aware
 import requests
+import pywhatkit
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -103,28 +104,46 @@ class BookingSessionSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         booking_session = BookingSession.objects.create(**validated_data)
         client_email = user.email
+        # Assuming phone_number is stored in the User model
+        client_phone_number = '254745897362'
+        if client_phone_number:
+            message = f"Hello {user.first_name}, your booking is confirmed for {booking_session.session_date} at {booking_session.session_time}."
+            self.send_whatsapp_message(client_phone_number, message)
 
-        # Create Google Meet event
-        session_date = validated_data['session_date']
-        session_time = validated_data['session_time']
-        start_datetime = datetime.datetime.combine(session_date, session_time)
-        end_datetime = start_datetime + \
-            datetime.timedelta(minutes=90)  # 1 hour and 30 minutes
+        # Send WhatsApp message to the therapist
+        # Replace with actual therapist phone number
+        therapist_phone_number = '254745897362'
+        if therapist_phone_number:
+            message = f"Hello, you have a new appointment with {user.first_name} on {booking_session.session_date} at {booking_session.session_time}."
+            self.send_whatsapp_message(therapist_phone_number, message)
 
-        event = create_google_meet_event(
-            summary='Booking Session',
-            start_time=start_datetime.isoformat(),
-            end_time=end_datetime.isoformat(),
-            attendees=[client_email]
-        )
+        # # Create Google Meet event
+        # session_date = validated_data['session_date']
+        # session_time = validated_data['session_time']
+        # start_datetime = datetime.datetime.combine(session_date, session_time)
+        # end_datetime = start_datetime + \
+        #     datetime.timedelta(minutes=90)  # 1 hour and 30 minutes
+
+        # # event = create_google_meet_event(
+        # #     summary='Booking Session',
+        # #     start_time=start_datetime.isoformat(),
+        # #     end_time=end_datetime.isoformat(),
+        # #     attendees=[client_email]
+        # # )
 
         # Send email to the client
         subject = 'Booking Confirmation'
-        message = f'Hello, your booking has been confirmed. Here is your Google Meet link: {event["hangoutLink"]}'
+        message = f'Hello, your booking has been confirmed. Here is your Google Meet link: '
         send_mail(subject, message,
                   settings.DEFAULT_FROM_EMAIL, ['emekadaves10@gmail.com'])
 
         return booking_session
+
+    def send_whatsapp_message(self, phone_number, message):
+        try:
+            pywhatkit.sendwhatmsg_instantly(f"+{'254795083960'}", message)
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def update(self, instance, validated_data):
         user = validated_data.pop("user", None)
