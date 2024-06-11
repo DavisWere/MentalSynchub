@@ -1,19 +1,13 @@
 import os
 import datetime
-from datetime import timedelta
 from django.utils.timezone import make_aware
 import requests
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.db import transaction
-from django.db.models import Sum
-import json
 from django.conf import settings
 from .google_api import create_google_meet_event
 from django.utils import timezone
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 
