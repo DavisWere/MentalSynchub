@@ -6,14 +6,13 @@ import pywhatkit
 from django.core.mail import send_mail
 from django.db import transaction
 from django.conf import settings
-from .google_api import create_google_meet_event
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 
 from core.models import (User,  BookingSession,
-                         Transaction, Game, ChatCompletion, Notification,
+                         Transaction, ChatCompletion, Notification,
                          Schedule)
 
 
@@ -282,24 +281,6 @@ class ConfirmPaymentStatusSerializer(serializers.ModelSerializer):
             donation.utilised = True
             donation.save()
         return payment_transaction
-
-
-class GameSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Game
-        fields = ['id', 'user', 'player_choice', 'computer_choice',
-                  'play_again', 'result', 'created_at']
-        read_only_fields = ['created_at', 'user', 'result', 'computer_choice']
-
-    def create(self, validated_data):
-        request = self.context.get("request", None)
-        if request is None or not request.user.is_authenticated:
-            raise serializers.ValidationError("User is not authenticated.")
-
-        user = request.user
-        game = object.create(**validated_data)
-        return game
 
 
 class ChatCompletionSerializer(serializers.ModelSerializer):
