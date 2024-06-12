@@ -2,9 +2,6 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-
-
-
 from django.shortcuts import render
 import calendar
 from django.utils import timezone
@@ -69,11 +66,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     print(user)
-    #     all_transactions = Transaction.objects.filter(user=user)
-    #     return all_transactions
     def get_queryset(self):
         user = self.request.user
         if not user.is_superuser:
@@ -179,15 +171,15 @@ class ScheduleViewSet(viewsets.ModelViewSet):
         return Schedule.objects.filter(user=self.request.user)
 
 
-
 class CreateEventView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_credentials(self):
         creds = None
-        
+
         if os.path.exists('token.json'):
-            creds = Credentials.from_authorized_user_file('token.json', settings.SCOPES)
+            creds = Credentials.from_authorized_user_file(
+                'token.json', settings.SCOPES)
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
@@ -240,7 +232,8 @@ class CreateEventView(APIView):
                 },
             }
 
-            event = service.events().insert(calendarId='primary', body=event, conferenceDataVersion=1).execute()
+            event = service.events().insert(calendarId='primary', body=event,
+                                            conferenceDataVersion=1).execute()
             event_created = event.get("htmlLink")
             meeting_link = event["conferenceData"]["entryPoints"][0]["uri"]
 

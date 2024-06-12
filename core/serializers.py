@@ -106,16 +106,16 @@ class BookingSessionSerializer(serializers.ModelSerializer):
         client_email = user.email
         # Assuming phone_number is stored in the User model
         client_phone_number = '254745897362'
-        if client_phone_number:
-            message = f"Hello {user.first_name}, your booking is confirmed for {booking_session.session_date} at {booking_session.session_time}."
-            self.send_whatsapp_message(client_phone_number, message)
+        # if client_phone_number:
+        #     message = f"Hello {user.first_name}, your booking is confirmed for {booking_session.session_date} at {booking_session.session_time}."
+        #     self.send_whatsapp_message(client_phone_number, message)
 
-        # Send WhatsApp message to the therapist
-        # Replace with actual therapist phone number
-        therapist_phone_number = '254745897362'
-        if therapist_phone_number:
-            message = f"Hello, you have a new appointment with {user.first_name} on {booking_session.session_date} at {booking_session.session_time}."
-            self.send_whatsapp_message(therapist_phone_number, message)
+        # # Send WhatsApp message to the therapist
+        # # Replace with actual therapist phone number
+        # therapist_phone_number = '254745897362'
+        # if therapist_phone_number:
+        #     message = f"Hello, you have a new appointment with {user.first_name} on {booking_session.session_date} at {booking_session.session_time}."
+        #     self.send_whatsapp_message(therapist_phone_number, message)
 
         # # Create Google Meet event
         # session_date = validated_data['session_date']
@@ -139,11 +139,11 @@ class BookingSessionSerializer(serializers.ModelSerializer):
 
         return booking_session
 
-    def send_whatsapp_message(self, phone_number, message):
-        try:
-            pywhatkit.sendwhatmsg_instantly(f"+{'254795083960'}", message)
-        except Exception as e:
-            print(f"An error occurred: {e}")
+    # def send_whatsapp_message(self, phone_number, message):
+    #     try:
+    #         pywhatkit.sendwhatmsg_instantly(f"+{'254795083960'}", message)
+    #     except Exception as e:
+    #         print(f"An error occurred: {e}")
 
     def update(self, instance, validated_data):
         user = validated_data.pop("user", None)
