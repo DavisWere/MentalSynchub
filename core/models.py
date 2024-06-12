@@ -80,9 +80,6 @@ class Transaction(models.Model):
     )  # Mpesa code after a payment is complete
     transaction_type = models.CharField(
         max_length=100, choices=TRANSACTION_TYPE_CHOICES, default="session_booking")
-    # user_id = models.ForeignKey(
-    #         User, on_delete=models.PROTECT
-    #     )  # should take the current logged in user
     transaction_status = models.CharField(
         max_length=20, choices=TRANSACTION_STATUS_CHOICES, default="successful"
     )
