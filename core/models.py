@@ -161,3 +161,31 @@ class Notification(models.Model):
 
     def __str__(self):
         return f'{self.user.username}: {self.message}'
+
+
+class Schedule(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    link = models.URLField(max_length=500)
+    attendees = models.TextField()
+    reminders = models.IntegerField()
+    start_time = models.DateTimeField(null=True)
+    end_time = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_attendees(self):
+        """
+        Convert the comma-separated string of emails to a list.
+        """
+        if self.attendees:
+            return self.attendees.split(',')
+        return []
+
+    def set_attendees(self, attendees_list):
+        """
+        Convert a list of emails to a comma-separated string.
+        """
+        self.attendees = ','.join(attendees_list)
+        self.save()
+
+    def __str__(self):
+        return f'{self.user.username} meetings'

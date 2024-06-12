@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
     'core',
     'rest_framework',
     'drf_spectacular',
@@ -48,8 +50,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_standardized_errors',
-    'django.contrib.staticfiles',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -195,25 +198,33 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 # google meets configuration
 
-GOOGLE_CLIENT_ID = os.getenv('client_id')
-GOOGLE_CLIENT_SECRET = os.getenv('client_secret')
+# GOOGLE_CLIENT_ID = os.getenv('client_id')
+# GOOGLE_CLIENT_SECRET = os.getenv('client_secret')
 # Adjust this to your redirect URI
-GOOGLE_REDIRECT_URI = 'http://localhost:8000/oauth2callback/'
-GOOGLE_AUTH_URI = 'https://mentalsynchub.netlify.app'
-GOOGLE_TOKEN_URI = 'https://oauth2.googleapis.com/token'
-PROJECT_ID = os.getenv('project_id')
-GOOGLE_CLIENT_SECRET_JSON = {
-    "web": {
-        "client_id": GOOGLE_CLIENT_ID,
-        "project_id": PROJECT_ID,
-        "auth_uri": GOOGLE_AUTH_URI,
-        "token_uri": GOOGLE_TOKEN_URI,
-        "client_secret": GOOGLE_CLIENT_SECRET,
-        "redirect_uris": [
-            GOOGLE_REDIRECT_URI
-        ],
-        "javascript_origins": [
-            "https://mentalsynchub.netlify.app"
-        ]
-    }
-}
+# GOOGLE_REDIRECT_URI = 'http://localhost:8000/oauth2callback/'
+# GOOGLE_AUTH_URI = 'https://mentalsynchub.netlify.app'
+# GOOGLE_TOKEN_URI = 'https://oauth2.googleapis.com/token'
+# PROJECT_ID = os.getenv('project_id')
+# GOOGLE_CLIENT_SECRET_JSON = {
+#     "web": {
+#         "client_id": GOOGLE_CLIENT_ID,
+#         "project_id": PROJECT_ID,
+#         "auth_uri": GOOGLE_AUTH_URI,
+#         "token_uri": GOOGLE_TOKEN_URI,
+#         "client_secret": GOOGLE_CLIENT_SECRET,
+#         "redirect_uris": [
+#             GOOGLE_REDIRECT_URI
+#         ],
+#         "javascript_origins": [
+#             "https://mentalsynchub.netlify.app"
+#         ]
+#     }
+# }
+
+
+# Google meet settings
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+GOOGLE_REDIRECT_URI = os.environ.get('GOOGLE_REDIRECT_URI')
+# If modifying these scopes, delete the file token.json.
+SCOPES = ['https://www.googleapis.com/auth/calendar.events']
