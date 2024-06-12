@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_standardized_errors',
+    'games',
 ]
 
 SITE_ID = 1
