@@ -65,7 +65,8 @@ TRANSACTION_TYPE_CHOICES = (
 
 
 class Transaction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, editable=False)
     customer_account_number = models.CharField(max_length=20, null=True)
     transaction_amount = models.FloatField()
     transaction_currency = models.CharField(
