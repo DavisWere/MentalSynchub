@@ -1,12 +1,7 @@
 from django.db import models
-import django
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
-import os
-from datetime import datetime
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.utils import timezone
 
 # Create your models here.
 
@@ -85,9 +80,6 @@ class Transaction(models.Model):
     )  # Mpesa code after a payment is complete
     transaction_type = models.CharField(
         max_length=100, choices=TRANSACTION_TYPE_CHOICES, default="session_booking")
-    # user_id = models.ForeignKey(
-    #         User, on_delete=models.PROTECT
-    #     )  # should take the current logged in user
     transaction_status = models.CharField(
         max_length=20, choices=TRANSACTION_STATUS_CHOICES, default="successful"
     )
@@ -116,31 +108,6 @@ class BookingSession(models.Model):
 
     def __str__(self):
         return f"Booking Session for {self.user.username} on {self.session_date} at {self.session_time} - Status: {self.status}"
-
-
-class Game(models.Model):
-    ROCK = 'rock'
-    PAPER = 'paper'
-    SCISSORS = 'scissors'
-
-    CHOICES = [
-        (ROCK, 'rock'),
-        (PAPER, 'paper'),
-        (SCISSORS, 'scissors'),
-    ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # Choices: rock, paper, scissors
-    player_choice = models.CharField(max_length=10, choices=CHOICES)
-    # Choices: rock, paper, scissors
-    computer_choice = models.CharField(max_length=10)
-    # Result of the game (e.g., "You Won!", "A Draw!", "You Lost!")
-    result = models.CharField(max_length=20)
-    play_again = models.BooleanField(default=True)
-    # Timestamp when the game was played
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Game played by {self.user.username} at {self.created_at}"
 
 
 class ChatCompletion(models.Model):
