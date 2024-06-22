@@ -5,7 +5,8 @@ from googleapiclient.discovery import build
 from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework import status
-
+from django_filters.rest_framework import DjangoFilterBackend
+from core.filters import *
 import os
 from django.shortcuts import get_object_or_404
 from django.conf import settings
@@ -27,6 +28,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = UserFilter
 
     def get_queryset(self):
         user = self.request.user
@@ -52,6 +55,8 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     queryset = Transaction.objects.all()
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TransactionFilter
 
     def get_queryset(self):
         user = self.request.user
