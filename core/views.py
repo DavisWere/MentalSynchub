@@ -181,3 +181,40 @@ class CreateEventView(APIView):
         # except HttpError as error:
         except Exception as error:
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Working with youTube API to get videos on mental health
+class VideosView(APIView):
+    def get(self, request):
+        api_service_name = "youtube"
+        api_version = "v3"
+        api_key = settings.API_KEY
+
+        youtube = build(api_service_name, api_version, developerKey=api_key)
+
+        search_queries = ["mental health", "calming music", "Podcast mental health"]
+        videos = []
+
+        for query in search_queries:
+            youtube_request = youtube.search().list(
+                q=query,
+                part="snippet",
+                type="video",
+                maxResults=20
+            )
+            response = youtube_request.execute()
+            videos.extend(response['items'])
+
+        video_data = []
+        for video in videos:
+            video_info = {
+                "title": video["snippet"]["title"],
+                "description": video["snippet"]["description"],
+                "channelTitle": video["snippet"]["channelTitle"],
+                "publishTime": video["snippet"]["publishTime"],
+                "videoId": video["id"]["videoId"],
+                "URL": f"https://www.youtube.com/watch?v={video['id']['videoId']}"
+            }
+            video_data.append(video_info)
+
+        return Response(video_data, status=status.HTTP_200_OK)
