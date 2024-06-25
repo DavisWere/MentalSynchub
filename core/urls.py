@@ -1,8 +1,17 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
-from core.views import CustomObtainTokenPairView, UserViewSet, BookingSessionViewSet, TransactionViewSet, \
-    ConfirmPaymentStatusApiView, CreateEventView, ScheduleViewSet
+from core.views import (
+    CustomObtainTokenPairView, 
+    UserViewSet, 
+    BookingSessionViewSet, 
+    TransactionViewSet,
+    ConfirmPaymentStatusApiView, 
+    CreateEventView, 
+    ScheduleViewSet,
+    VideosView
+)
+
 
 
 
@@ -21,5 +30,6 @@ url_patterns += [
     ),
 
     path('create-event/', CreateEventView.as_view(), name='create-event'),
+    path('youtube/', VideosView.as_view(), name='youtube'),
 
 ]
