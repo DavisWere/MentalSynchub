@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from core.urls import url_patterns as core_urls_patterns
+# from core.urls import url_patterns as core_urls_patterns
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
@@ -45,7 +45,8 @@ urlpatterns = [
          SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     path('admin/', admin.site.urls),
-    path('api/', include([*core_urls_patterns])),
+    # path('api/', include([*core_urls_patterns])),
+    path('aoi/', include('core.urls')),
     path('api/', include('games.urls')),
 ]
 
