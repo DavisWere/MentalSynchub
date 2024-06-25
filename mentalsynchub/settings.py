@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import dj_database_url
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -30,7 +31,8 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if ENVIRONMENT != 'dev' else True
 
-ALLOWED_HOSTS = ['*', 'http://localhost:5173']
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOST', 'http://localhost:5173,localhost,127.0.0.1,mentalsynchub.up.railway.app').split(',')
 
 
 # Application definition
@@ -71,6 +73,8 @@ ROOT_URLCONF = 'mentalsynchub.urls'
 CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
                         'https://e43c-102-0-4-206.ngrok-free.app']
 CORS_ALLOW_CREDENTIALS = True
+CSRF_ALLOWED_HOST = ['mentalsynchub.up.railway.app']
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
@@ -104,12 +108,20 @@ WSGI_APPLICATION = 'mentalsynchub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES = {}
+
+POSTGRES_LOCALLY = False
+
+if DEBUG == False or POSTGRES_LOCALLY == True:
+    DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'OpenUp Api',
     'DESCRIPTION': 'mental health digital support Api',
