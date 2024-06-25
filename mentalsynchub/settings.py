@@ -32,7 +32,7 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT')
 DEBUG = False if ENVIRONMENT != 'dev' else True
 
 ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOST', 'http://localhost:5173,localhost,127.0.0.1,mentalsynchub.up.railway.app').split(',')
+    'ALLOWED_HOST', 'http://localhost:5173,localhost,127.0.0.1,openup.up.railway.app').split(',')
 
 
 # Application definition
