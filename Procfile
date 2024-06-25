@@ -1,1 +1,1 @@
-web: gunicorm mentalsynchub.wsgi
+web: gunicorn mentalsynchub.wsgi
