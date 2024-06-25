@@ -70,11 +70,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mentalsynchub.urls'
-# CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = []
 CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
                         'https://e43c-102-0-4-206.ngrok-free.app']
 CORS_ALLOW_CREDENTIALS = True
-CSRF_ALLOWED_HOST = ['mentalsynchub.up.railway.app']
+CSRF_TRUSTED_ORIGIN = ['https://openup.up.railway.app']
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
