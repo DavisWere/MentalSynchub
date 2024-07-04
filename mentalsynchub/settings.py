@@ -31,8 +31,8 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if ENVIRONMENT != 'dev' else True
 
-ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOST', 'http://localhost:5173,localhost,127.0.0.1,openup.up.railway.app').split(',')
+ALLOWED_HOSTS = (
+    '*', 'http://localhost:5173,localhost,127.0.0.1,openup.up.railway.app').split(',')
 
 
 # Application definition
@@ -73,10 +73,10 @@ ROOT_URLCONF = 'mentalsynchub.urls'
 # CORS_ALLOW_ALL_ORIGINS = []
 CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
                         'https://e43c-102-0-4-206.ngrok-free.app',
-                        'http://localhost:3000']
+                        'http://localhost:3000', '*']
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGIN = [
-    'https://openup.up.railway.app', 'http://localhost:3000']
+    'https://openup.up.railway.app', 'http://localhost:3000', '*']
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
