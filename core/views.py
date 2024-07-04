@@ -27,7 +27,7 @@ class CustomObtainTokenPairView(TokenObtainPairView):
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_class = UserFilter
 
@@ -192,7 +192,8 @@ class VideosView(APIView):
 
         youtube = build(api_service_name, api_version, developerKey=api_key)
 
-        search_queries = ["mental health", "calming music", "Podcast mental health"]
+        search_queries = ["mental health",
+                          "calming music", "Podcast mental health"]
         videos = []
 
         for query in search_queries:
