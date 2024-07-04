@@ -73,10 +73,10 @@ ROOT_URLCONF = 'mentalsynchub.urls'
 # CORS_ALLOW_ALL_ORIGINS = []
 CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
                         'https://e43c-102-0-4-206.ngrok-free.app',
-                        'http://localhost:3000', '*']
+                        'http://localhost:3000', 'http://localhost:8000', '*']
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGIN = [
-    'https://openup.up.railway.app', 'http://localhost:3000', '*']
+    'https://openup.up.railway.app', 'http://localhost:3000', 'http://localhost:8000', '*']
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
