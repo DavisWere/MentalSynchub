@@ -72,9 +72,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'mentalsynchub.urls'
 # CORS_ALLOW_ALL_ORIGINS = []
 CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
-                        'https://e43c-102-0-4-206.ngrok-free.app']
+                        'https://e43c-102-0-4-206.ngrok-free.app',
+                        'http://localhost:3000']
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGIN = ['https://openup.up.railway.app']
+CSRF_TRUSTED_ORIGIN = [
+    'https://openup.up.railway.app', 'http://localhost:3000']
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -111,7 +113,7 @@ WSGI_APPLICATION = 'mentalsynchub.wsgi.application'
 
 DATABASES = {}
 
-POSTGRES_LOCALLY = False
+POSTGRES_LOCALLY = True
 
 if DEBUG == False or POSTGRES_LOCALLY == True:
     DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
