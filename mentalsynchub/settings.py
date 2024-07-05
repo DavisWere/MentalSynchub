@@ -82,7 +82,7 @@ CORS_ALLOWED_ORIGINS = os.getenv(
     'http://localhost:3000,http://127.0.0.1:3000'
 ).split(',')
 
-CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGIN = [
     'https://openup.up.railway.app', 'http://localhost:3000', 'https://web-openup.netlify.app']
 # CSRF_TRUSTED_ORIGINS = ['*']
