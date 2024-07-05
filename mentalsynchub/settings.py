@@ -32,7 +32,7 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT')
 DEBUG = False if ENVIRONMENT != 'dev' else True
 
 ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOST', 'http://localhost:5173,http://localhost:3000,127.0.0.1,https://web-openup.netlify.app,openup.up.railway.app').split(',')
+    'ALLOWED_HOST', 'localhost:5173,localhost,127.0.0.1,web-openup.netlify.app,openup.up.railway.app').split(',')
 
 
 # Application definition
