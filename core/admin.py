@@ -18,6 +18,7 @@ class CustomUserAdmin(UserAdmin):
 
 
 
+
                 )
             },
         ),
@@ -32,6 +33,7 @@ class CustomUserAdmin(UserAdmin):
                     "user_type",
                     "email",
                     'transaction_id',
+                    'password'
 
 
                 )
@@ -48,6 +50,7 @@ class ScheduleAdmin(admin.ModelAdmin):
         'reminders',
         'link'
     ]
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(BookingSession)
