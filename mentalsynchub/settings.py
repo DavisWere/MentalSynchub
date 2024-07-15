@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import dj_database_url
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -30,7 +31,8 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if ENVIRONMENT != 'dev' else True
 
-ALLOWED_HOSTS = ['*', 'http://localhost:5173']
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOST', 'localhost:5173,localhost,127.0.0.1,web-openup.netlify.app,openup.up.railway.app').split(',')
 
 
 # Application definition
@@ -58,20 +60,36 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'mentalsynchub.urls'
-# CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
-                        'https://e43c-102-0-4-206.ngrok-free.app']
+# CORS_ALLOW_ALL_ORIGINS = ['*']
+# CORS_ALLOWED_ORIGINS = ['https://mentalsynchub.netlify.app',
+#                         'https://e43c-102-0-4-206.ngrok-free.app',
+#                         'http://localhost:3000',
+#                         'https://web-openup.netlify.app']
+
+# CORS_ALLOWED_ORIGINS = os.getenv(
+#     'CORS_ALLOWED_ORIGINS',
+#     'http://localhost:3000,http://127.0.0.1:3000,https://web-openup.netlify.app',
+# ).split(',')
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGIN = [
+    'https://openup.up.railway.app', 'http://localhost:3000', 'https://web-openup.netlify.app']
+# CSRF_TRUSTED_ORIGINS = ['*']
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
@@ -105,12 +123,20 @@ WSGI_APPLICATION = 'mentalsynchub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES = {}
+
+POSTGRES_LOCALLY = True
+
+if DEBUG == False or POSTGRES_LOCALLY == True:
+    DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'OpenUp Api',
     'DESCRIPTION': 'mental health digital support Api',
@@ -177,6 +203,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Default primary key field type

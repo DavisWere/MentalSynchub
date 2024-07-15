@@ -2,7 +2,6 @@ import os
 import datetime
 from django.utils.timezone import make_aware
 import requests
-import pywhatkit
 from django.core.mail import send_mail
 from django.db import transaction
 from django.conf import settings

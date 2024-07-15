@@ -1,0 +1,1 @@
+web: gunicorn mentalsynchub.wsgi
