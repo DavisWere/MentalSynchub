@@ -47,6 +47,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include([*core_urls_patterns])),
     path('api/', include('games.urls')),
+    path('api/', include('materials.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
