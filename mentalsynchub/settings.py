@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_standardized_errors',
     'games',
+    'materials',
 ]
 
 SITE_ID = 1
