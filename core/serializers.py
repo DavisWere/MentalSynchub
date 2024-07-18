@@ -9,6 +9,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
 
 from core.models import (User,  BookingSession,
                          Transaction, ChatCompletion, Notification,
@@ -52,6 +53,18 @@ class UserSerializer(serializers.ModelSerializer):
             # Remove password field for therapists from representation
             data.pop('password')
         return data
+
+    def create(self, validated_data):
+        # Hash the password before saving the user
+        validated_data['password'] = make_password(
+            validated_data.get('password'))
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        # Hash the password before saving the user
+        validated_data['password'] = make_password(
+            validated_data.get('password'))
+        return super().update(instance, validated_data)
 
 
 class BookingSessionSerializer(serializers.ModelSerializer):
