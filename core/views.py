@@ -34,10 +34,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if not user.is_superuser:
-            user = User.objects.filter(user=user)
-        else:
-            user = User.objects.all()
-        return user
+            return User.objects.filter(id=user.id)
+        return User.objects.all()
 
 
 class BookingSessionViewSet(viewsets.ModelViewSet):
@@ -60,8 +58,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        print(user)
         if not user.is_superuser:
-            transaction = Transaction.objects.filter(user=user)
+            transaction = Transaction.objects.filter(user=user.id)
         else:
             transaction = Transaction.objects.all()
         return transaction
@@ -80,7 +79,6 @@ class ConfirmPaymentStatusApiView(APIView):
 
     def get_queryset(self):
         user = self.request.user
-        print(user)
         all_transactions = Transaction.objects.filter(user=user)
         return all_transactions
 
