@@ -35,7 +35,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Assuming user_type is passed in request data
         user_type = self.context['request'].data.get('user_type', None)
         if user_type == User.THERAPIST:
             self.fields['therapy_license'] = serializers.CharField(
