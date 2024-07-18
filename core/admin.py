@@ -14,7 +14,8 @@ class CustomUserAdmin(UserAdmin):
                     "phone_code",
                     "phone_number",
                     "user_type",
-                    'transaction_id',
+
+
 
 
 
@@ -32,8 +33,7 @@ class CustomUserAdmin(UserAdmin):
                     "phone_number",
                     "user_type",
                     "email",
-                    'transaction_id',
-                    'password'
+
 
 
                 )
