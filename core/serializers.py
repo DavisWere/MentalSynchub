@@ -291,6 +291,7 @@ class ConfirmPaymentStatusSerializer(serializers.ModelSerializer):
 
             donation.utilised = True
             donation.save()
+        payment_transaction.save()
         return payment_transaction
 
 
