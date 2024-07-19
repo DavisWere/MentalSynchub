@@ -258,7 +258,7 @@ class ConfirmPaymentStatusSerializer(serializers.ModelSerializer):
 
         if (
             payment_transaction.transaction_type == "session_booking"
-            and payment_transaction.transaction_status == "successful"
+            and payment_transaction.transaction_status == "processed"
         ):
 
             booked_session = BookingSession.objects.get(
@@ -270,7 +270,7 @@ class ConfirmPaymentStatusSerializer(serializers.ModelSerializer):
 
         if (
             payment_transaction.transaction_type == "therapist_subscription"
-            and payment_transaction.transaction_status == "successful"
+            and payment_transaction.transaction_status == "processed"
         ):
             # Get the subscription
             therapist_subscription = User.objects.filter(
@@ -281,7 +281,7 @@ class ConfirmPaymentStatusSerializer(serializers.ModelSerializer):
             therapist_subscription.save()
         if (
             payment_transaction.transaction_type == "donation"
-            and payment_transaction.transaction_status == "successful" and payment_transaction.utilised == True
+            and payment_transaction.transaction_status == "processed" and payment_transaction.utilised == True
 
         ):
             # Get the subscription
