@@ -46,7 +46,7 @@ class User(AbstractUser):
 
 TRANSACTION_STATUS_CHOICES = (
     ("processing", "Processing"),
-    ("successful", "Successful"),
+    ("processed", "Successful"),
     ("failed", "Failed"),
 )
 CURRENCY_CHOICES = (
