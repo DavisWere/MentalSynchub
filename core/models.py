@@ -26,7 +26,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=30, blank=True, null=True)
     avatar = models.FileField(blank=True, null=True)
     user_type = models.CharField(
-        max_length=10, choices=USER_TYPE_CHOICES, default='client')
+        max_length=10, choices=USER_TYPE_CHOICES)
     username = models.CharField(
         max_length=128, unique=True, blank=True, null=True)
     password = models.CharField(max_length=128, default='123456')
