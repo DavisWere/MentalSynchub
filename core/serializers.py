@@ -42,8 +42,8 @@ class UserSerializer(serializers.ModelSerializer):
                 max_length=255)
             self.fields['specialization'] = serializers.CharField(
                 max_length=100)
-            self.fields['transaction_id'] = serializers.CharField(
-                max_length=100)
+            # self.fields['transaction_id'] = serializers.CharField(
+            #     max_length=100)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
