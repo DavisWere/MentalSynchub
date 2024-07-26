@@ -9,12 +9,14 @@ from core.views import (
     ConfirmPaymentStatusApiView,
     CreateEventView,
     ScheduleViewSet,
-    VideosView
+    VideosView,
+    GetAllTherepistsViewset
 )
 
 
 core_router = DefaultRouter()
 core_router.register(r"user", UserViewSet)
+core_router.register(r'therapists', GetAllTherepistsViewset)
 core_router.register(r"booking-session", BookingSessionViewSet)
 core_router.register(r"transaction", TransactionViewSet)
 core_router.register(r"schedules", ScheduleViewSet, basename='schedules')
@@ -29,6 +31,7 @@ urlpatterns = [
 
     path('create-event/', CreateEventView.as_view(), name='create-event'),
     path('youtube/', VideosView.as_view(), name='youtube'),
+
 
 ]
 urlpatterns += core_router.urls
