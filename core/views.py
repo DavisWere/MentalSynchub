@@ -38,6 +38,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return User.objects.all()
 
 
+class GetAllTherepistsViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.filter(user_type='therapist')
+    serializer_class = UserSerializer
+
+
 class BookingSessionViewSet(viewsets.ModelViewSet):
     serializer_class = BookingSessionSerializer
     queryset = BookingSession.objects.all()
