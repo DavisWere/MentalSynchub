@@ -41,6 +41,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class GetAllTherepistsViewset(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.filter(user_type='therapist')
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class BookingSessionViewSet(viewsets.ModelViewSet):
