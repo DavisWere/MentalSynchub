@@ -4,10 +4,19 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from rest_framework import viewsets, permissions
 from rest_framework.views import APIView
+import io
+from xhtml2pdf import pisa
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from io import BytesIO
+from django.http import FileResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from core.filters import *
 import os
+from django.views.generic import View
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from rest_framework.response import Response
@@ -36,6 +45,62 @@ class UserViewSet(viewsets.ModelViewSet):
         if not user.is_superuser:
             return User.objects.filter(id=user.id)
         return User.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        generate_pdf = request.query_params.get(
+            'generate_pdf', 'false').lower() == 'true'
+        if generate_pdf:
+            buffer = io.BytesIO()
+            p = canvas.Canvas(buffer, pagesize=letter)
+            p.setFont("Helvetica", 12)
+            width, height = letter
+
+            y = height - 40  # Start from the top of the page
+
+            users = self.get_queryset()
+            p.drawString(30, y, "User List")
+            y -= 20
+
+            for user in users:
+                p.drawString(
+                    30, y, f"First Name: {user.first_name}, Last Name: {user.last_name}, Email: {user.email}, User Type: {user.user_type}")
+                y -= 20
+                if y < 40:
+                    p.showPage()
+                    p.setFont("Helvetica", 12)
+                    y = height - 40
+
+            p.save()
+
+            buffer.seek(0)
+            return FileResponse(buffer, as_attachment=True, filename='user_list.pdf')
+
+        return response
+
+
+class PDFView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        users = User.objects.all() if user.is_superuser else None
+
+        serializer = UserSerializer(
+            users, many=True, context={'request': request})
+        context = {'users': serializer.data}
+
+        html_string = render_to_string('user_list.html', context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=user_list.pdf'
+
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), result)
+        if not pdf.err:
+            response.write(result.getvalue())
+            return response
+        return HttpResponse('We had some errors <pre>' + html_string + '</pre>')
 
 
 class GetAllTherepistsViewset(viewsets.ReadOnlyModelViewSet):
