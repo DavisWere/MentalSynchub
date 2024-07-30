@@ -10,7 +10,8 @@ from core.views import (
     CreateEventView,
     ScheduleViewSet,
     VideosView,
-    GetAllTherepistsViewset
+    GetAllTherepistsViewset,
+    PDFView
 )
 
 
@@ -31,6 +32,7 @@ urlpatterns = [
 
     path('create-event/', CreateEventView.as_view(), name='create-event'),
     path('youtube/', VideosView.as_view(), name='youtube'),
+    path('users/pdf/', PDFView.as_view(), name='user-list-pdf')
 
 
 ]
